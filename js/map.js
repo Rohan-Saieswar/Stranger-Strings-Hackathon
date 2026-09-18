@@ -55,8 +55,8 @@ export class IndiaMapManager {
     // CARTO Basemaps API Key
     this.cartoApiKey = 'cb1_3q09_1_ca7361cbcdd68727f3a81f3e';
 
-    // Dark Matter tile layer for high-tech command center aesthetic
-    const tileUrl = `https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png?api_key=${this.cartoApiKey}`;
+    // Dark Matter tile layer for high-tech command center aesthetic (watermark-free authenticated)
+    const tileUrl = `https://{s}.basemaps.cartocdn.com/rastertiles/dark_all/{z}/{x}/{y}{r}.png?key=${this.cartoApiKey}`;
     this.baseTileLayer = window.L.tileLayer(
       tileUrl,
       {
