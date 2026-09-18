@@ -1,0 +1,628 @@
+/* ==========================================================================
+   WATERPULSE - Area Intelligence Panel Styles
+   ========================================================================== */
+
+.area-intelligence-container {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* ==========================================================================
+   HEADER CARD & RISK GAUGE
+   ========================================================================== */
+.panel-header-card {
+  background: rgba(14, 23, 42, 0.7);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  box-shadow: var(--shadow-sm);
+}
+
+.panel-header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.area-title-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.area-region-tag {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.area-name {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: #ffffff;
+  line-height: 1.25;
+}
+
+.area-submeta {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+.area-submeta span {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+/* Circular Risk Gauge */
+.risk-gauge-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.risk-gauge-ring {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: conic-gradient(
+    var(--gauge-color, #00e599) 0% var(--gauge-pct, 20%),
+    rgba(255, 255, 255, 0.08) var(--gauge-pct, 20%) 100%
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+  box-shadow: 0 0 16px rgba(0, 0, 0, 0.4);
+  transition: background 0.6s ease;
+}
+
+.risk-gauge-inner {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: #0b1424;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.risk-number {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: #ffffff;
+  line-height: 1;
+}
+
+.risk-denom {
+  font-size: 0.62rem;
+  color: var(--text-dim);
+}
+
+.risk-status-badge {
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.6px;
+  padding: 3px 10px;
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
+}
+
+.pulse-indicator-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  animation: pulseBeacon 1.2s infinite;
+}
+
+.panel-quick-actions {
+  display: grid;
+  grid-template-columns: 1.2fr 1.2fr 1fr;
+  gap: 8px;
+}
+
+/* ==========================================================================
+   PANEL SECTIONS & HEADERS
+   ========================================================================== */
+.panel-section {
+  background: rgba(12, 20, 36, 0.6);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  padding-bottom: 10px;
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.section-title h3 {
+  font-family: var(--font-display);
+  font-size: 0.88rem;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  color: #ffffff;
+}
+
+.status-chip {
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 4px;
+  text-transform: uppercase;
+}
+
+.status-chip.potable {
+  background: rgba(0, 229, 153, 0.15);
+  color: var(--color-potable);
+  border: 1px solid rgba(0, 229, 153, 0.3);
+}
+
+.status-chip.caution {
+  background: rgba(255, 179, 0, 0.15);
+  color: var(--color-caution);
+  border: 1px solid rgba(255, 179, 0, 0.3);
+}
+
+.status-chip.unsafe {
+  background: rgba(255, 140, 0, 0.18);
+  color: var(--color-unsafe);
+  border: 1px solid rgba(255, 140, 0, 0.35);
+}
+
+.status-chip.contaminated {
+  background: rgba(255, 51, 102, 0.2);
+  color: var(--color-critical);
+  border: 1px solid rgba(255, 51, 102, 0.4);
+}
+
+/* ==========================================================================
+   WATER QUALITY TELEMETRY GRID
+   ========================================================================== */
+.telemetry-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+.telemetry-card {
+  background: rgba(255, 255, 255, 0.025);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  transition: all var(--transition-fast);
+}
+
+.telemetry-card:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.telemetry-card.warning {
+  border-color: rgba(255, 179, 0, 0.35);
+  background: rgba(255, 179, 0, 0.04);
+}
+
+.telemetry-card.critical {
+  border-color: rgba(255, 51, 102, 0.45);
+  background: rgba(255, 51, 102, 0.05);
+}
+
+.card-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: var(--text-dim);
+  letter-spacing: 0.4px;
+}
+
+.card-value {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: #ffffff;
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+}
+
+.card-value .unit {
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+.card-sub {
+  font-size: 0.68rem;
+  color: var(--text-dim);
+}
+
+/* Chart Canvas Wrapper */
+.chart-container-wrap {
+  margin-top: 6px;
+  background: rgba(8, 14, 26, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  border-radius: var(--radius-md);
+  padding: 12px;
+}
+
+.chart-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.chart-header h4 {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.chart-legend-hint {
+  font-size: 0.65rem;
+  color: var(--text-dim);
+}
+
+.canvas-wrapper {
+  position: relative;
+  height: 180px;
+  width: 100%;
+}
+
+/* ==========================================================================
+   ILLNESS SURVEILLANCE & VISUALS
+   ========================================================================== */
+.report-delta-chip {
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.report-delta-chip.surge {
+  background: rgba(255, 51, 102, 0.2);
+  color: var(--color-critical);
+  border: 1px solid rgba(255, 51, 102, 0.4);
+}
+
+.report-delta-chip.normal {
+  background: rgba(0, 229, 153, 0.15);
+  color: var(--color-potable);
+}
+
+.illness-metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+
+.metric-card {
+  background: rgba(255, 255, 255, 0.025);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  padding: 10px 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.metric-card.alert-bg {
+  background: rgba(255, 51, 102, 0.08);
+  border-color: rgba(255, 51, 102, 0.3);
+}
+
+.metric-num {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.metric-label {
+  font-size: 0.68rem;
+  color: var(--text-dim);
+  margin-top: 2px;
+}
+
+.visuals-dual-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 6px;
+}
+
+.chart-box {
+  background: rgba(8, 14, 26, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  border-radius: var(--radius-md);
+  padding: 10px;
+}
+
+.canvas-doughnut-wrap {
+  position: relative;
+  height: 150px;
+  width: 100%;
+}
+
+.canvas-bar-wrap {
+  position: relative;
+  height: 150px;
+  width: 100%;
+}
+
+/* ==========================================================================
+   RECENT REPORTS TABLE
+   ========================================================================== */
+.records-badge {
+  font-size: 0.7rem;
+  color: var(--text-dim);
+}
+
+.reports-table-container {
+  overflow-x: auto;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: var(--radius-md);
+}
+
+.reports-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.76rem;
+  text-align: left;
+}
+
+.reports-table th {
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text-dim);
+  font-weight: 600;
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.reports-table td {
+  padding: 8px 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  color: var(--text-muted);
+}
+
+.reports-table tr:hover td {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.date-col {
+  color: var(--text-dim);
+  font-family: monospace;
+  font-size: 0.72rem;
+  white-space: nowrap;
+}
+
+.symptom-tag {
+  color: var(--text-main);
+  font-weight: 500;
+}
+
+.affected-col strong {
+  color: #ffffff;
+}
+
+.affected-col .subtext {
+  font-size: 0.65rem;
+  color: var(--text-dim);
+}
+
+.source-col {
+  color: var(--color-primary);
+}
+
+.empty-table {
+  text-align: center;
+  color: var(--text-dim);
+  padding: 16px !important;
+}
+
+/* ==========================================================================
+   WHY FLAGGED? EXPLAINABLE SIGNALS QUAD-GRID
+   ========================================================================== */
+.why-flagged-section {
+  border-color: rgba(168, 85, 247, 0.3);
+  background: rgba(16, 17, 36, 0.6);
+}
+
+.explainable-badge {
+  font-size: 0.65rem;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: rgba(168, 85, 247, 0.18);
+  color: #c084fc;
+  border: 1px solid rgba(168, 85, 247, 0.35);
+  font-weight: 700;
+}
+
+.signals-quad-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+
+.signal-card {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  border-left-width: 4px;
+}
+
+.signal-card.normal {
+  border-left-color: var(--color-potable);
+}
+
+.signal-card.monitoring {
+  border-left-color: var(--color-caution);
+}
+
+.signal-card.elevated {
+  border-left-color: var(--color-unsafe);
+}
+
+.signal-card.severe, .signal-card.critical {
+  border-left-color: var(--color-critical);
+  background: rgba(255, 51, 102, 0.04);
+}
+
+.signal-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.signal-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.signal-title {
+  font-weight: 700;
+  font-size: 0.82rem;
+  color: #ffffff;
+}
+
+.signal-score {
+  font-size: 0.72rem;
+  color: var(--text-dim);
+}
+
+.signal-status-tag {
+  font-size: 0.65rem;
+  font-weight: 800;
+  padding: 1px 6px;
+  border-radius: 4px;
+  text-transform: uppercase;
+}
+
+.signal-status-tag.normal {
+  background: rgba(0, 229, 153, 0.15);
+  color: var(--color-potable);
+}
+
+.signal-status-tag.monitoring {
+  background: rgba(255, 179, 0, 0.15);
+  color: var(--color-caution);
+}
+
+.signal-status-tag.elevated {
+  background: rgba(255, 140, 0, 0.15);
+  color: var(--color-unsafe);
+}
+
+.signal-status-tag.severe, .signal-status-tag.critical {
+  background: rgba(255, 51, 102, 0.2);
+  color: var(--color-critical);
+}
+
+.signal-explanation {
+  font-size: 0.76rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+/* ==========================================================================
+   EMERGENCY ACTION PROTOCOLS
+   ========================================================================== */
+.protocol-status-badge {
+  font-size: 0.65rem;
+  font-weight: 800;
+  color: var(--color-primary);
+  background: rgba(0, 210, 255, 0.12);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.protocol-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.protocol-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px;
+  border-radius: var(--radius-sm);
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border-subtle);
+  font-size: 0.78rem;
+}
+
+.protocol-item.critical {
+  border-color: rgba(255, 51, 102, 0.35);
+  background: rgba(255, 51, 102, 0.06);
+}
+
+.protocol-item.urgent {
+  border-color: rgba(255, 140, 0, 0.3);
+  background: rgba(255, 140, 0, 0.05);
+}
+
+.protocol-icon {
+  color: var(--color-primary);
+  margin-top: 1px;
+}
+
+.protocol-item.critical .protocol-icon {
+  color: var(--color-critical);
+}
+
+.protocol-content strong {
+  display: block;
+  color: #ffffff;
+  margin-bottom: 2px;
+}
+
+.protocol-content p {
+  color: var(--text-muted);
+  line-height: 1.35;
+}
