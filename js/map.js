@@ -52,16 +52,20 @@ export class IndiaMapManager {
       ]
     });
 
+    // CARTO Basemaps API Key
+    this.cartoApiKey = 'cb1_3q09_1_ca7361cbcdd68727f3a81f3e';
+
     // Dark Matter tile layer for high-tech command center aesthetic
-    const tileLayer = window.L.tileLayer(
-      'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
+    const tileUrl = `https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png?api_key=${this.cartoApiKey}`;
+    this.baseTileLayer = window.L.tileLayer(
+      tileUrl,
       {
         attribution: '&copy; <a href="https://carto.com/">CARTO</a> | DataMeet India | WaterPulse',
         subdomains: 'abcd',
         maxZoom: 19
       }
     );
-    tileLayer.addTo(this.map);
+    this.baseTileLayer.addTo(this.map);
 
     // Layer groups for markers
     this.sensorLayerGroup = window.L.layerGroup().addTo(this.map);
