@@ -16,6 +16,123 @@
   font-family: var(--font-family) !important;
 }
 
+.district-marker-wrap {
+  display: grid;
+  place-items: center;
+}
+
+.district-marker-dot {
+  display: block;
+  width: 11px;
+  height: 11px;
+  border: 2px solid #06111f;
+  border-radius: 50%;
+  background: #a78bfa;
+  box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.22), 0 0 14px rgba(167, 139, 250, 0.8);
+}
+
+.district-popup-kicker {
+  display: block;
+  margin-bottom: 5px;
+  color: #a78bfa;
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+}
+
+.district-picker {
+  position: absolute;
+  top: 72px;
+  left: 20px;
+  z-index: 950;
+  width: 270px;
+  max-width: calc(100% - 40px);
+  padding: 13px;
+  border: 1px solid rgba(167, 139, 250, 0.4);
+  border-radius: var(--radius-md);
+  background: rgba(9, 17, 32, 0.92);
+  backdrop-filter: blur(16px);
+  box-shadow: 0 14px 32px rgba(0, 0, 0, 0.45);
+}
+
+body:not(.view-map) .district-picker {
+  display: none !important;
+}
+
+.district-picker-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+  padding-bottom: 9px;
+  border-bottom: 1px solid rgba(170, 205, 255, 0.14);
+}
+
+.district-picker-header strong {
+  display: block;
+  color: #f2eaff;
+  font-size: 0.92rem;
+}
+
+.district-picker-kicker {
+  display: block;
+  margin-bottom: 3px;
+  color: #c4a8ff;
+  font-size: 0.6rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+}
+
+.district-picker-close {
+  border: 0;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 1.25rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.district-picker-list {
+  display: grid;
+  gap: 6px;
+  margin-top: 9px;
+  max-height: 230px;
+  overflow-y: auto;
+}
+
+.district-picker-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+  padding: 8px 9px;
+  border: 1px solid rgba(170, 205, 255, 0.12);
+  border-radius: 7px;
+  background: rgba(255, 255, 255, 0.04);
+  color: #eaf2ff;
+  text-align: left;
+  cursor: pointer;
+}
+
+.district-picker-item:hover {
+  border-color: rgba(167, 139, 250, 0.5);
+  background: rgba(167, 139, 250, 0.14);
+}
+
+.district-picker-item span {
+  overflow: hidden;
+  font-size: 0.76rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.district-picker-item small {
+  flex-shrink: 0;
+  color: #c4a8ff;
+  font-size: 0.62rem;
+}
+
 .leaflet-control-attribution {
   background: rgba(6, 11, 22, 0.75) !important;
   backdrop-filter: blur(8px);

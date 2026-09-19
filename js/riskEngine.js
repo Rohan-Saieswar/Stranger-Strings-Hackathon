@@ -4,13 +4,21 @@
  */
 
 export const RISK_LEVELS = {
-  LOW: { label: 'LOW RISK', color: '#00e599', bg: 'rgba(0, 229, 153, 0.15)', border: '#00e599' },
-  MODERATE: { label: 'MODERATE RISK', color: '#ffb300', bg: 'rgba(255, 179, 0, 0.15)', border: '#ffb300' },
-  HIGH: { label: 'HIGH RISK', color: '#ff8c00', bg: 'rgba(255, 140, 0, 0.18)', border: '#ff8c00' },
-  CRITICAL: { label: 'CRITICAL ALERT', color: '#ff3366', bg: 'rgba(255, 51, 102, 0.2)', border: '#ff3366' }
+  LOW: { label: 'Normal', color: '#4ade80', bg: 'rgba(74, 222, 128, 0.15)', border: '#4ade80' },
+  MODERATE: { label: 'Watch', color: '#fbbf24', bg: 'rgba(251, 191, 36, 0.15)', border: '#fbbf24' },
+  HIGH: { label: 'Elevated', color: '#f97316', bg: 'rgba(249, 115, 22, 0.16)', border: '#f97316' },
+  CRITICAL: { label: 'Early Warning', color: '#c084fc', bg: 'rgba(192, 132, 252, 0.16)', border: '#c084fc' }
 };
 
 export class RiskEngine {
+  static getRiskBand(score) {
+    const value = Math.max(0, Math.min(100, Number(score) || 0));
+    if (value <= 29) return { key: 'LOW', label: 'Normal', color: '#4ade80', bg: 'rgba(74, 222, 128, 0.15)', border: '#4ade80' };
+    if (value <= 49) return { key: 'MODERATE', label: 'Watch', color: '#fbbf24', bg: 'rgba(251, 191, 36, 0.15)', border: '#fbbf24' };
+    if (value <= 69) return { key: 'HIGH', label: 'Elevated', color: '#f97316', bg: 'rgba(249, 115, 22, 0.16)', border: '#f97316' };
+    if (value <= 84) return { key: 'HIGH', label: 'High Alert', color: '#fb7185', bg: 'rgba(251, 113, 133, 0.16)', border: '#fb7185' };
+    return { key: 'CRITICAL', label: 'Early Warning', color: '#c084fc', bg: 'rgba(192, 132, 252, 0.16)', border: '#c084fc' };
+  }
   /**
    * Recalculate complete risk profile for an area based on telemetry and reports.
    * @param {Object} telemetry - { ph, turbidity, tds, temperature }
@@ -37,17 +45,18 @@ export class RiskEngine {
 
     // Categorize risk status
     let status = 'LOW';
-    if (totalScore >= 80) status = 'CRITICAL';
-    else if (totalScore >= 65) status = 'HIGH';
-    else if (totalScore >= 40) status = 'MODERATE';
+    if (totalScore >= 85) status = 'CRITICAL';
+    else if (totalScore >= 70) status = 'HIGH';
+    else if (totalScore >= 30) status = 'MODERATE';
 
-    // Emergency action protocols based on calculated risk
+    const levelInfo = this.getRiskBand(totalScore);
     const actionProtocols = this._generateActionProtocols(status, telemetry, illnessMetrics);
 
     return {
       score: totalScore,
       status: status,
-      levelInfo: RISK_LEVELS[status],
+      band: levelInfo.label,
+      levelInfo: { ...RISK_LEVELS[status], label: levelInfo.label, color: levelInfo.color, bg: levelInfo.bg, border: levelInfo.border },
       signals: {
         illnessIncrease: illnessSignal,
         geographicClustering: clusteringSignal,

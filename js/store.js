@@ -4,6 +4,7 @@
  */
 
 import { buildCompleteAreasDatabase, ALL_INDIAN_STATES_NAMES } from './indiaData.js';
+import { DISTRICT_DATA, generateAutoDistricts } from './districtData.js';
 import { RiskEngine } from './riskEngine.js';
 
 export const EVENTS = {
@@ -11,6 +12,7 @@ export const EVENTS = {
   REPORT_SUBMITTED: 'REPORT_SUBMITTED',
   WATER_UPDATED: 'WATER_UPDATED',
   STATE_MUTATED: 'STATE_MUTATED',
+  LIVE_CONTEXT_UPDATED: 'LIVE_CONTEXT_UPDATED',
   ALERT_TRIGGERED: 'ALERT_TRIGGERED',
   SIMULATION_STEP: 'SIMULATION_STEP'
 };
@@ -44,6 +46,31 @@ class WaterPulseStore {
         ...area,
         risk: riskProfile
       };
+    });
+
+    // Add district records to the same selection model used by state areas.
+    Object.entries(rawData).forEach(([stateName, stateArea]) => {
+      const stateDistricts = DISTRICT_DATA[stateName]?.districts || generateAutoDistricts(stateName);
+      Object.entries(stateDistricts).forEach(([districtName, district]) => {
+        if (this.areas[district.id]) return;
+        const riskProfile = RiskEngine.calculateAreaRisk(
+          district.telemetry,
+          district.illnessMetrics,
+          district.recentReports,
+          district.historicalWater || stateArea.historicalWater
+        );
+
+        this.areas[district.id] = {
+          ...district,
+          basin: stateArea.basin,
+          shortName: district.name,
+          monitoringNodes: district.sensors?.length || 0,
+          historicalWater: district.historicalWater || stateArea.historicalWater,
+          historicalIllness: district.historicalIllness || stateArea.historicalIllness,
+          symptomsBreakdown: district.symptomsBreakdown || stateArea.symptomsBreakdown,
+          risk: riskProfile
+        };
+      });
     });
 
     // Seed initial system alerts
@@ -108,6 +135,13 @@ class WaterPulseStore {
     const area = this.getSelectedArea();
     this.notify(EVENTS.AREA_SELECTED, area);
     return area;
+  }
+
+  setLiveContext(areaId, liveContext) {
+    const area = this.areas[areaId];
+    if (!area || !liveContext || this.selectedAreaId !== areaId) return;
+    area.liveContext = liveContext;
+    this.notify(EVENTS.LIVE_CONTEXT_UPDATED, { areaId, area, liveContext });
   }
 
   /**

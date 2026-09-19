@@ -20,6 +20,7 @@ export class AreaPanelManager {
     store.subscribe(EVENTS.AREA_SELECTED, (area) => this.render(area));
     store.subscribe(EVENTS.REPORT_SUBMITTED, ({ area }) => this.render(area));
     store.subscribe(EVENTS.WATER_UPDATED, ({ area }) => this.render(area));
+    store.subscribe(EVENTS.LIVE_CONTEXT_UPDATED, ({ area }) => this.render(area));
   }
 
   /**
@@ -28,7 +29,7 @@ export class AreaPanelManager {
   render(area) {
     if (!area) return;
 
-    const { telemetry, illnessMetrics, recentReports, historicalWater, historicalIllness, symptomsBreakdown, risk } = area;
+    const { telemetry, illnessMetrics, recentReports, historicalWater, historicalIllness, symptomsBreakdown, risk, liveContext } = area;
     const levelInfo = RISK_LEVELS[risk.status] || RISK_LEVELS.LOW;
 
     // Build the complete panel HTML
@@ -71,6 +72,41 @@ export class AreaPanelManager {
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
             Export Dossier
           </button>
+          <button class="btn btn-report-office" id="btn-generate-office-report" data-area-id="${area.id}" title="Generate district health office summary">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="16" y2="17"/></svg>
+            Generate Office Report
+          </button>
+        </div>
+
+        <div class="live-context-card">
+          <div class="live-context-heading">
+            <span><i class="fas fa-cloud-sun"></i> LIVE LOCAL CONTEXT</span>
+            <small>${liveContext ? `Updated ${liveContext.observedAt.replace('T', ' ')} (${liveContext.timezone})` : 'Loading public weather data...'}</small>
+          </div>
+          ${liveContext ? `
+            <div class="live-context-grid">
+              <div><strong>${liveContext.condition}</strong><span>Current conditions</span></div>
+              <div><strong>${liveContext.temperature} °C</strong><span>Air temperature</span></div>
+              <div><strong>${liveContext.precipitation} mm</strong><span>Precipitation</span></div>
+              <div><strong>${liveContext.humidity}%</strong><span>Humidity</span></div>
+            </div>
+            <div class="live-context-source">Public weather context from Open-Meteo. It does not measure water quality or prove contamination.</div>
+          ` : '<div class="live-context-loading">Live context will appear when the public data service responds.</div>'}
+        </div>
+
+        <div class="lead-time-card">
+          <div class="section-header compact-section-header">
+            <div class="section-title"><span class="lead-time-icon">↗</span><h3>EARLY-WARNING LEAD TIME</h3></div>
+            <span class="explainable-badge">Retrospective demo timeline</span>
+          </div>
+          <p class="lead-time-intro">The sequence shows why monitoring water signals can move an investigation ahead of visible case growth.</p>
+          <div class="lead-time-timeline">
+            <div class="lead-time-step water"><span class="lead-time-day">DAY 3</span><strong>Water quality dropped</strong><small>Turbidity and dissolved solids moved outside the local baseline.</small></div>
+            <div class="lead-time-step rain"><span class="lead-time-day">DAY 5</span><strong>Rainfall spiked</strong><small>Runoff conditions increased the need for verification and sampling.</small></div>
+            <div class="lead-time-step cases"><span class="lead-time-day">DAY 14</span><strong>Cases spiked</strong><small>Community reports crossed the visible-response threshold.</small></div>
+          </div>
+          <div class="lead-time-result"><strong>11 days of lead time</strong><span>between the first water signal and the observed case spike</span></div>
+          <small class="lead-time-note">This is an illustrative retrospective scenario for the prototype, not proof of causation or a confirmed outbreak.</small>
         </div>
       </div>
 
@@ -339,6 +375,13 @@ export class AreaPanelManager {
     if (exportBtn) {
       exportBtn.addEventListener('click', () => {
         window.dispatchEvent(new CustomEvent('open-export-dossier', { detail: { areaId } }));
+      });
+    }
+
+    const officeReportBtn = document.getElementById('btn-generate-office-report');
+    if (officeReportBtn) {
+      officeReportBtn.addEventListener('click', () => {
+        window.dispatchEvent(new CustomEvent('generate-office-report', { detail: { areaId } }));
       });
     }
   }

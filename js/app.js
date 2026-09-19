@@ -7,6 +7,7 @@ import { store, EVENTS } from './store.js';
 import { indiaMapManager } from './map.js';
 import { areaPanelManager } from './panel.js';
 import { ALL_INDIAN_STATES_NAMES } from './indiaData.js';
+import { fetchLiveWeather } from './realWorldData.js';
 
 class WaterPulseApp {
   constructor() {
@@ -25,11 +26,13 @@ class WaterPulseApp {
 
     // 3. Setup UI Controls & Listeners
     this._setupSearch();
+    this._setupMenuBar();
     this._setupMapControls();
     this._setupModals();
     this._setupSimulation();
     this._setupAlertTicker();
     this._setupNetworkStats();
+    this._setupOfficeReports();
 
     // Listen to store events for notifications
     store.subscribe(EVENTS.REPORT_SUBMITTED, ({ area, report }) => {
@@ -59,7 +62,67 @@ class WaterPulseApp {
       this._updateAlertTicker();
     });
 
+    store.subscribe(EVENTS.AREA_SELECTED, (area) => this._loadLiveContext(area));
+    this._loadLiveContext(store.getSelectedArea());
+
     console.log('WATERPULSE Network online and operational.');
+  }
+
+  async _loadLiveContext(area) {
+    if (!area?.center) return;
+    const liveWeather = await fetchLiveWeather(area);
+    if (liveWeather) store.setLiveContext(area.id, liveWeather);
+  }
+
+  _setupOfficeReports() {
+    window.addEventListener('generate-office-report', (event) => {
+      const area = store.getArea(event.detail?.areaId || store.selectedAreaId);
+      if (!area) return;
+
+      const drivers = Object.values(area.risk.signals || {})
+        .filter(signal => signal.score > 0)
+        .map(signal => `- ${signal.rationale}`)
+        .join('\n') || '- No elevated driver recorded in the current model.';
+      const actions = (area.risk.actionProtocols || [])
+        .map(protocol => `- ${protocol.title}: ${protocol.desc}`)
+        .join('\n') || '- Continue routine monitoring and local verification.';
+      const report = [
+        'WATERPULSE / DISTRICT HEALTH OFFICE SUMMARY',
+        '================================================',
+        `Generated: ${new Date().toLocaleString('en-IN')}`,
+        `District: ${area.name}`,
+        `State / Zone: ${area.state} / ${area.basin || 'Local catchment'}`,
+        '',
+        `RISK LEVEL: ${area.risk.status}`,
+        `RISK SCORE: ${area.risk.score}/100`,
+        '',
+        'CURRENT CASE SIGNAL',
+        `- Reports in last 24 hours: ${area.illnessMetrics.last24h}`,
+        `- Total reports recorded: ${area.illnessMetrics.totalReports}`,
+        `- Change versus 7-day baseline: ${area.illnessMetrics.percentChange}%`,
+        '',
+        'KEY DRIVERS',
+        drivers,
+        '',
+        'RECOMMENDED ACTION',
+        actions,
+        '',
+        'WATERPULSE LIMITATION',
+        'This is an early-warning prototype summary. It does not diagnose disease, establish causation, or confirm an outbreak.',
+        'Verify signals with district health, water, and sanitation authorities before taking public action.'
+      ].join('\n');
+
+      const blob = new Blob([report], { type: 'text/plain;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `waterpulse-${area.name.replace(/[^a-z0-9]+/gi, '-').toLowerCase()}-health-office-report.txt`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(url);
+      this.showToast('Office Report Generated', `${area.name} summary downloaded as a text report.`, 'info');
+    });
   }
 
   /**
@@ -89,7 +152,7 @@ class WaterPulseApp {
             area.shortName.toLowerCase().includes(q) ||
             (area.basin && area.basin.toLowerCase().includes(q))) {
           matches.push({
-            type: 'Area / Basin',
+            type: area.id !== area.state ? 'District' : 'State / Basin',
             title: area.name,
             subtitle: `${area.state} &bull; Risk: ${area.risk.score}/100`,
             areaId: area.id,
@@ -135,7 +198,13 @@ class WaterPulseApp {
       this.searchDropdown.querySelectorAll('.search-result-item').forEach(el => {
         el.addEventListener('click', () => {
           const areaId = el.getAttribute('data-area-id');
-          store.selectArea(areaId);
+          const area = store.selectArea(areaId);
+          if (area?.id === area?.state) {
+            document.querySelector('.menu-item[data-target="map"]')?.click();
+            indiaMapManager.showDistrictsForState(area.state);
+          } else {
+            document.querySelector('.menu-item[data-target="intelligence"]')?.click();
+          }
           this.searchDropdown.classList.remove('active');
           this.searchInput.value = '';
         });
@@ -161,6 +230,48 @@ class WaterPulseApp {
         firstItem.click();
       }
     });
+  }
+
+  _setupMenuBar() {
+    const buttons = document.querySelectorAll('.menu-item');
+    if (!buttons.length) return;
+
+    const setView = (target) => {
+      document.body.classList.remove('view-overview', 'view-map', 'view-intelligence', 'view-water-safety');
+      if (['overview', 'map', 'intelligence', 'water-safety'].includes(target)) {
+        document.body.classList.add(`view-${target}`);
+      }
+
+      if (target === 'map' || target === 'intelligence') {
+        requestAnimationFrame(() => indiaMapManager.invalidateSize());
+      }
+
+      if (target === 'map') indiaMapManager.resetToIndiaView();
+      if (target !== 'map') indiaMapManager.hideDistricts();
+    };
+
+    buttons.forEach((button) => {
+      button.addEventListener('click', () => {
+        const target = button.dataset.target;
+        buttons.forEach((item) => item.classList.toggle('active', item === button));
+        setView(target);
+
+        switch (target) {
+          case 'reports':
+            window.dispatchEvent(new CustomEvent('open-report-modal', {
+              detail: { areaId: store.selectedAreaId || Object.keys(store.areas)[0] }
+            }));
+            break;
+          case 'response':
+            document.getElementById('btn-trigger-simulation')?.click();
+            break;
+          default:
+            break;
+        }
+      });
+    });
+
+    setView('overview');
   }
 
   /**

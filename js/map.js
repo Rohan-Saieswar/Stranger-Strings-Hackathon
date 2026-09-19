@@ -13,6 +13,8 @@ export class IndiaMapManager {
     this.geojsonLayer = null;
     this.sensorLayerGroup = null;
     this.clusterLayerGroup = null;
+    this.districtLayerGroup = null;
+    this.districtPicker = null;
     this.selectedLayer = null;
     this.geoData = null;
 
@@ -26,6 +28,7 @@ export class IndiaMapManager {
     this.showChoropleth = true;
     this.showSensors = true;
     this.showClusters = true;
+    this.activeDistrictState = null;
   }
 
   /**
@@ -33,6 +36,8 @@ export class IndiaMapManager {
    */
   async init() {
     if (this.map) return;
+
+    this.districtPicker = document.getElementById('district-picker');
 
     // Create Leaflet Map with smooth gestures
     this.map = window.L.map(this.containerId, {
@@ -70,6 +75,7 @@ export class IndiaMapManager {
     // Layer groups for markers
     this.sensorLayerGroup = window.L.layerGroup().addTo(this.map);
     this.clusterLayerGroup = window.L.layerGroup().addTo(this.map);
+    this.districtLayerGroup = window.L.layerGroup();
 
     // Load GeoJSON and render state choropleth
     await this._loadIndiaGeoJSON();
@@ -199,6 +205,7 @@ export class IndiaMapManager {
 
       click: (e) => {
         store.selectArea(stateName);
+        this.showDistrictsForState(stateName);
         this.zoomToLayerBounds(layer);
       }
     });
@@ -250,6 +257,7 @@ export class IndiaMapManager {
 
     this.sensorLayerGroup.clearLayers();
     this.clusterLayerGroup.clearLayers();
+    this.districtLayerGroup.clearLayers();
 
     const allAreas = Object.values(store.areas);
 
@@ -334,6 +342,89 @@ export class IndiaMapManager {
         this.clusterLayerGroup.addLayer(clusterMarker);
       }
     });
+
+    if (this.activeDistrictState) this.showDistrictsForState(this.activeDistrictState);
+  }
+
+  showDistrictsForState(stateName) {
+    if (!this.districtLayerGroup || !this.map) return;
+    this.activeDistrictState = stateName;
+    this.districtLayerGroup.clearLayers();
+
+    const districts = Object.values(store.areas)
+      .filter(area => area.id !== area.state && area.state === stateName && area.center)
+      ;
+
+    if (this.districtPicker) {
+      this.districtPicker.hidden = districts.length === 0;
+      this.districtPicker.innerHTML = `
+        <div class="district-picker-header">
+          <div><span class="district-picker-kicker">STATE SELECTED</span><strong>${stateName}</strong></div>
+          <button type="button" class="district-picker-close" aria-label="Hide districts">×</button>
+        </div>
+        <div class="district-picker-list">
+          ${districts.map(area => `
+            <button type="button" class="district-picker-item" data-area-id="${area.id}">
+              <span>${area.name}</span><small>${area.risk.status} · ${area.risk.score}/100</small>
+            </button>
+          `).join('')}
+        </div>
+      `;
+      this.districtPicker.querySelector('.district-picker-close')?.addEventListener('click', () => {
+        this.activeDistrictState = null;
+        this.districtPicker.hidden = true;
+        this.districtLayerGroup.clearLayers();
+      });
+      this.districtPicker.querySelectorAll('.district-picker-item').forEach(button => {
+        button.addEventListener('click', () => {
+          store.selectArea(button.dataset.areaId);
+          document.querySelector('.menu-item[data-target="intelligence"]')?.click();
+        });
+      });
+    }
+
+    districts.forEach(area => {
+        const districtIcon = window.L.divIcon({
+          className: 'district-marker-wrap',
+          html: '<span class="district-marker-dot"></span>',
+          iconSize: [16, 16],
+          iconAnchor: [8, 8]
+        });
+        const districtMarker = window.L.marker(area.center, { icon: districtIcon });
+        districtMarker.bindPopup(`
+          <div class="marker-popup-content district-popup-content">
+            <span class="district-popup-kicker">DISTRICT INTELLIGENCE</span>
+            <h4>${area.name}</h4>
+            <div class="popup-metrics">
+              <div><span>State:</span> <strong>${area.state}</strong></div>
+              <div><span>Risk:</span> <strong>${area.risk.score}/100</strong></div>
+              <div><span>Water:</span> <strong>${area.telemetry.status}</strong></div>
+            </div>
+            <button class="popup-action-btn district-inspect-btn" data-area-id="${area.id}">Inspect District</button>
+          </div>
+        `);
+        districtMarker.on('popupopen', () => {
+          const button = document.querySelector(`.district-inspect-btn[data-area-id="${area.id}"]`);
+          button?.addEventListener('click', () => {
+            store.selectArea(area.id);
+            document.querySelector('.menu-item[data-target="intelligence"]')?.click();
+            this.map.closePopup();
+          });
+        });
+        districtMarker.on('click', () => store.selectArea(area.id));
+        this.districtLayerGroup.addLayer(districtMarker);
+      });
+
+    this.districtLayerGroup.addTo(this.map);
+  }
+
+  hideDistricts() {
+    this.activeDistrictState = null;
+    if (this.districtPicker) this.districtPicker.hidden = true;
+    this.districtLayerGroup?.clearLayers();
+    if (this.districtLayerGroup && this.map?.hasLayer(this.districtLayerGroup)) {
+      this.map.removeLayer(this.districtLayerGroup);
+    }
   }
 
   /**
@@ -371,6 +462,7 @@ export class IndiaMapManager {
       duration: 1.0
     });
     this.highlightStateByName(store.getSelectedArea()?.state);
+    this.hideDistricts();
   }
 
   /**

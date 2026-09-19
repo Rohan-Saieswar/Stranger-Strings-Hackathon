@@ -22,9 +22,10 @@
   <link rel="stylesheet" href="css/map.css">
   <link rel="stylesheet" href="css/panel.css">
 </head>
-<body>
+<body class="view-overview">
 
   <div id="app-shell">
+    <div class="demo-disclaimer-bar">DEMO / PROTOTYPE DATA</div>
     
     <!-- TOP COMMAND HUD & LIVE TICKER -->
     <header class="app-header">
@@ -41,7 +42,7 @@
             <div class="brand-name">
               WATERPULSE <span class="brand-badge">INDIA SURVEILLANCE</span>
             </div>
-            <div class="brand-subtitle">Community Water Health Early-Warning Command Network</div>
+            <div class="brand-subtitle">Community Water Health & Early-Warning Intelligence Platform</div>
           </div>
         </div>
 
@@ -82,6 +83,15 @@
 
       </div>
 
+      <nav class="top-menu-bar" aria-label="Main navigation">
+        <button type="button" class="menu-item active" data-target="overview">Overview</button>
+        <button type="button" class="menu-item" data-target="map">Map</button>
+        <button type="button" class="menu-item" data-target="intelligence">Intelligence</button>
+        <button type="button" class="menu-item" data-target="water-safety">Water Safety</button>
+        <button type="button" class="menu-item" data-target="reports">Reports</button>
+        <button type="button" class="menu-item" data-target="response">Response</button>
+      </nav>
+
       <!-- Live Incident Alert Ticker Bar -->
       <div class="alert-ticker-strip">
         <div class="ticker-label">
@@ -96,6 +106,215 @@
 
     <!-- MAIN VIEWPORT: DUAL-PANE (LEAFLET MAP + AREA INTELLIGENCE PANEL) -->
     <main class="main-viewport">
+      <div class="content-stack">
+        <section class="info-shell" id="overview-panel">
+          <div class="glass-panel info-banner">
+            <div class="section-kicker">Detect. Understand. Respond.</div>
+            <h2>Community Water Health & Early-Warning Intelligence Platform</h2>
+            <p>WaterPulse brings together anonymous illness reporting, live demo telemetry, and geospatial risk intelligence to surface unusual patterns for local investigation without claiming a diagnosis or confirmed outbreak.</p>
+            <div class="warning-banner">WaterPulse is an early-warning prototype. It does not diagnose disease, establish causation, or confirm an outbreak.</div>
+          </div>
+          <div class="glass-panel info-rail-card">
+            <div class="section-kicker">Overview</div>
+            <div><strong>Water Quality:</strong> demo sensor telemetry</div>
+            <div><strong>Illness Signals:</strong> anonymized community reporting</div>
+            <div><strong>Risk Logic:</strong> multi-factor algorithm</div>
+            <div><strong>Response:</strong> local investigation recommended</div>
+          </div>
+
+          <div class="overview-detail-grid">
+            <article class="glass-panel overview-topic-card overview-signal-card">
+              <div class="section-kicker">01 / Signal Snapshot</div>
+              <h3>Read the situation in layers</h3>
+              <p>WaterPulse places environmental readings and community-reported symptoms beside location context so teams can see where signals overlap.</p>
+              <div class="overview-metric-list">
+                <div><span>Telemetry</span><strong>pH · turbidity · TDS · temperature</strong></div>
+                <div><span>Community</span><strong>Symptoms, timing, source, area</strong></div>
+                <div><span>Context</span><strong>State risk and sensor coverage</strong></div>
+              </div>
+            </article>
+
+            <article class="glass-panel overview-topic-card">
+              <div class="section-kicker">02 / How It Works</div>
+              <h3>From observation to action</h3>
+              <div class="overview-step-list">
+                <div class="overview-step"><span>1</span><div><strong>Observe</strong><small>Review live demo telemetry and incoming reports.</small></div></div>
+                <div class="overview-step"><span>2</span><div><strong>Compare</strong><small>Check whether water and health signals cluster in one area.</small></div></div>
+                <div class="overview-step"><span>3</span><div><strong>Investigate</strong><small>Open the area intelligence panel and verify locally.</small></div></div>
+                <div class="overview-step"><span>4</span><div><strong>Respond</strong><small>Share practical guidance while evidence is reviewed.</small></div></div>
+              </div>
+            </article>
+
+            <article class="glass-panel overview-topic-card overview-priority-card">
+              <div class="section-kicker">03 / Response Priorities</div>
+              <h3>What deserves attention first?</h3>
+              <ul class="overview-priority-list">
+                <li><span class="priority-dot critical"></span><div><strong>Persistent abnormal readings</strong><small>Repeat or verify before escalating.</small></div></li>
+                <li><span class="priority-dot warning"></span><div><strong>Sudden illness increase</strong><small>Review timing, symptoms, and affected population.</small></div></li>
+                <li><span class="priority-dot observe"></span><div><strong>Signals that overlap geographically</strong><small>Use the map to identify a shared catchment.</small></div></li>
+              </ul>
+              <button type="button" class="overview-action" data-target="map" onclick="document.querySelector('.menu-item[data-target=\'map\']')?.click()">Open spatial view <span>→</span></button>
+            </article>
+          </div>
+        </section>
+
+        <section class="glass-panel water-safety-panel" id="water-safety-panel">
+          <div class="section-kicker">Water Safety & Purification</div>
+          <h2>Practical Water Treatment Guidance</h2>
+          <p>These methods can reduce risk when used appropriately, but they do not replace a proper local investigation or professional advice. A single reading does not prove contamination.</p>
+
+          <div class="water-safety-grid">
+            <article class="method-card">
+              <div class="section-kicker">Boiling</div>
+              <h3>Boiling 🔥</h3>
+              <p>Boiling can make many water sources safer by reducing microbes, especially when safe water is not immediately available.</p>
+              <ul>
+                <li>Useful when supply is uncertain or storage is unclean.</li>
+                <li>Bring water to a rolling boil; cool and store safely.</li>
+                <li>Does not remove all chemical contaminants.</li>
+              </ul>
+            </article>
+            <article class="method-card">
+              <div class="section-kicker">Filtration</div>
+              <h3>Filtration 💧</h3>
+              <p>Filtration can reduce sediment and turbidity depending on the device and maintenance.</p>
+              <ul>
+                <li>Useful for visible particles and cloudiness.</li>
+                <li>Different filters vary in performance and purpose.</li>
+                <li>Not all filters remove dissolved chemicals.</li>
+              </ul>
+            </article>
+            <article class="method-card">
+              <div class="section-kicker">Disinfection</div>
+              <h3>Chlorination 🧪</h3>
+              <p>Appropriate chlorination can help inactivate many microorganisms.</p>
+              <ul>
+                <li>Follow product and public-health instructions carefully.</li>
+                <li>Incorrect amounts can affect taste or safety.</li>
+                <li>Disinfection does not remove every contaminant.</li>
+              </ul>
+            </article>
+            <article class="method-card">
+              <div class="section-kicker">UV</div>
+              <h3>UV Treatment ☀️</h3>
+              <p>UV treatment can help inactivate some microorganisms when applied to suitable, reasonably clear water.</p>
+              <ul>
+                <li>Works best with clear, low-turbidity water.</li>
+                <li>Equipment and instructions must be followed.</li>
+                <li>Not a substitute for proper storage and maintenance.</li>
+              </ul>
+            </article>
+            <article class="method-card">
+              <div class="section-kicker">RO</div>
+              <h3>RO / Reverse Osmosis 💧</h3>
+              <p>RO can reduce some dissolved substances through a membrane, but it is not the same as simple filtration.</p>
+              <ul>
+                <li>Useful for selected dissolved contaminants.</li>
+                <li>Requires proper maintenance and periodic checking.</li>
+                <li>Water use and waste can be significant.</li>
+              </ul>
+            </article>
+            <article class="method-card">
+              <div class="section-kicker">Storage</div>
+              <h3>Safe Storage 🫙</h3>
+              <p>Stored water can become unsafe if containers are dirty or uncovered.</p>
+              <ul>
+                <li>Keep treated water in clean, covered containers.</li>
+                <li>Avoid dirty hands touching drinking water.</li>
+                <li>Clean storage vessels regularly.</li>
+              </ul>
+            </article>
+          </div>
+
+          <div class="compare-grid">
+            <div class="section-kicker">What is your water concern?</div>
+            <div class="pill-row">
+              <button class="pill-button" data-water-concern="microorganisms">Microorganisms</button>
+              <button class="pill-button" data-water-concern="mud">Mud / Turbidity</button>
+              <button class="pill-button" data-water-concern="dissolved">Dissolved Substances</button>
+              <button class="pill-button" data-water-concern="unknown">Unknown Water Quality</button>
+            </div>
+            <div class="comparison-table-wrap">
+              <table class="comparison-table">
+                <thead>
+                  <tr>
+                    <th>Method</th>
+                    <th>Main Purpose</th>
+                    <th>Useful For</th>
+                    <th>Important Limitation</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td>Boiling</td><td>Disinfection</td><td>Many microorganisms</td><td>Does not remove every chemical contaminant</td></tr>
+                  <tr><td>Filtration</td><td>Physical removal</td><td>Sediment / turbidity depending on filter</td><td>Performance varies by technology</td></tr>
+                  <tr><td>Chlorination</td><td>Disinfection</td><td>Many microorganisms</td><td>Does not remove all contaminants</td></tr>
+                  <tr><td>UV</td><td>Microbial inactivation</td><td>Suitable clear water</td><td>Requires appropriate equipment</td></tr>
+                  <tr><td>RO</td><td>Membrane treatment</td><td>Some dissolved substances</td><td>Requires maintenance</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div id="water-concern-summary" class="tip-card">
+              <strong>General guidance:</strong> For unknown water quality, consider using a safer source or a combination of treatment methods only after checking local public-health guidance and source conditions.
+            </div>
+          </div>
+        </section>
+
+        <section class="glass-panel health-panel" id="health-panel">
+          <div class="section-kicker">Health Guidance</div>
+          <h2>What to do</h2>
+          <div class="health-grid">
+            <article class="tip-card">
+              <h3>Diarrheal illness</h3>
+              <ul>
+                <li>Drink safe fluids regularly.</li>
+                <li>Use clean, safe drinking water.</li>
+                <li>Wash hands with soap.</li>
+                <li>Avoid preparing food for others while sick.</li>
+                <li>Seek professional medical advice if symptoms are severe, persistent, or worsening.</li>
+              </ul>
+            </article>
+            <article class="tip-card">
+              <h3>Vomiting / stomach illness</h3>
+              <ul>
+                <li>Take frequent small amounts of safe fluids.</li>
+                <li>Rest and monitor for dehydration.</li>
+                <li>Use safe water and hygienic food.</li>
+                <li>Seek medical advice if severe or persistent.</li>
+              </ul>
+            </article>
+            <article class="tip-card">
+              <h3>Fever</h3>
+              <ul>
+                <li>Rest.</li>
+                <li>Drink safe fluids.</li>
+                <li>Monitor symptoms.</li>
+                <li>Seek professional medical advice if severe or persistent.</li>
+              </ul>
+            </article>
+            <article class="tip-card">
+              <h3>When to seek medical help</h3>
+              <ul>
+                <li>Severe or worsening symptoms.</li>
+                <li>Inability to keep fluids down.</li>
+                <li>Signs of dehydration.</li>
+                <li>Blood in vomit or stool.</li>
+                <li>Unusual weakness or confusion.</li>
+                <li>Serious illness in a vulnerable person.</li>
+              </ul>
+            </article>
+          </div>
+          <div class="warning-banner" style="margin-top:20px;">WaterPulse provides information and early-warning signals. It cannot diagnose an illness or determine that a particular water source caused a disease. Health information shown here is general guidance, not a substitute for professional medical advice.</div>
+        </section>
+
+        <section class="glass-panel water-safety-panel">
+          <div class="section-kicker">Water Safety Tips</div>
+          <h2>Water Safety Tips</h2>
+          <div class="health-grid">
+            <article class="tip-card"><h3>Safe habits</h3><ul><li>Use reliable safe drinking water.</li><li>Keep drinking-water containers clean and covered.</li><li>Wash hands with soap.</li><li>Maintain food hygiene.</li><li>Follow local water-safety advisories.</li></ul></article>
+            <article class="tip-card"><h3>Important interpretation</h3><ul><li>If unusual water-quality readings appear, treat them as a reason for further investigation rather than proof of contamination.</li><li>Do not rely on one reading alone to decide a water source is unsafe or safe.</li></ul></article>
+          </div>
+        </section>
+      </div>
       
       <!-- Interactive India Map Section -->
       <section id="map-section-wrapper">
@@ -192,6 +411,7 @@
         </div>
 
         <!-- Actual Leaflet Map Canvas -->
+        <div class="district-picker" id="district-picker" aria-live="polite" hidden></div>
         <div id="india-map"></div>
 
       </section>

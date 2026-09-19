@@ -70,6 +70,184 @@
   gap: 5px;
 }
 
+.live-context-card {
+  padding: 13px 15px;
+  border: 1px solid rgba(100, 217, 255, 0.22);
+  border-radius: var(--radius-md);
+  background: rgba(100, 217, 255, 0.06);
+}
+
+.live-context-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  color: var(--color-primary);
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+.live-context-heading small,
+.live-context-source,
+.live-context-loading {
+  color: var(--text-muted);
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0;
+}
+
+.live-context-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.live-context-grid div {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.live-context-grid strong {
+  color: #eaf8ff;
+  font-size: 0.78rem;
+  overflow-wrap: anywhere;
+}
+
+.live-context-grid span {
+  color: var(--text-muted);
+  font-size: 0.65rem;
+}
+
+.live-context-source {
+  margin-top: 10px;
+  line-height: 1.4;
+}
+
+.btn-report-office {
+  color: #f0dcff;
+  border-color: rgba(167, 139, 250, 0.42);
+  background: rgba(167, 139, 250, 0.12);
+}
+
+.btn-report-office:hover {
+  background: rgba(167, 139, 250, 0.22);
+}
+
+.lead-time-card {
+  padding: 16px;
+  border: 1px solid rgba(100, 217, 255, 0.2);
+  border-radius: var(--radius-lg);
+  background: linear-gradient(135deg, rgba(17, 35, 58, 0.78), rgba(11, 23, 40, 0.5));
+}
+
+.compact-section-header {
+  margin-bottom: 0;
+}
+
+.lead-time-icon {
+  color: var(--color-primary);
+  font-size: 1.3rem;
+  line-height: 1;
+}
+
+.lead-time-intro {
+  margin: 8px 0 16px;
+  color: var(--text-muted);
+  font-size: 0.78rem;
+  line-height: 1.5;
+}
+
+.lead-time-timeline {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  position: relative;
+}
+
+.lead-time-timeline::before {
+  content: "";
+  position: absolute;
+  top: 12px;
+  left: 8%;
+  right: 8%;
+  height: 1px;
+  background: linear-gradient(90deg, #64d9ff, #fbbf24, #fb7185);
+  opacity: 0.55;
+}
+
+.lead-time-step {
+  display: grid;
+  gap: 5px;
+  position: relative;
+  padding: 30px 10px 10px;
+  border: 1px solid rgba(170, 205, 255, 0.14);
+  border-radius: var(--radius-md);
+  background: rgba(4, 11, 22, 0.45);
+}
+
+.lead-time-step::before {
+  content: "";
+  position: absolute;
+  top: 7px;
+  left: 12px;
+  width: 10px;
+  height: 10px;
+  border: 2px solid #06111f;
+  border-radius: 50%;
+  background: var(--step-color);
+  box-shadow: 0 0 12px var(--step-color);
+}
+
+.lead-time-step.water { --step-color: #64d9ff; }
+.lead-time-step.rain { --step-color: #fbbf24; }
+.lead-time-step.cases { --step-color: #fb7185; }
+
+.lead-time-day {
+  color: var(--step-color);
+  font-size: 0.64rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+}
+
+.lead-time-step strong {
+  color: #f3f8ff;
+  font-size: 0.82rem;
+}
+
+.lead-time-step small {
+  color: var(--text-muted);
+  font-size: 0.7rem;
+  line-height: 1.4;
+}
+
+.lead-time-result {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-top: 14px;
+  color: #c8f4ff;
+}
+
+.lead-time-result strong {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+}
+
+.lead-time-result span,
+.lead-time-note {
+  color: var(--text-muted);
+  font-size: 0.7rem;
+}
+
+.lead-time-note {
+  display: block;
+  margin-top: 8px;
+  line-height: 1.4;
+}
+
 /* Circular Risk Gauge */
 .risk-gauge-container {
   display: flex;
@@ -140,8 +318,29 @@
 
 .panel-quick-actions {
   display: grid;
-  grid-template-columns: 1.2fr 1.2fr 1fr;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 8px;
+}
+
+.panel-quick-actions .btn {
+  min-width: 0;
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.panel-quick-actions .btn-report-office {
+  grid-column: 1 / -1;
+}
+
+@media (max-width: 620px) {
+  .panel-quick-actions {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .panel-quick-actions .btn-export-dossier {
+    grid-column: 1 / -1;
+  }
 }
 
 /* ==========================================================================
